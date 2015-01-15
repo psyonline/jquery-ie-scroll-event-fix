@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<title> ie scroll event fix with jquery </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+
+<style>
+/*html {height:100%;}*/
+</style>
+
+</head>
+
+<body>
+
+<div style="height:5000px;background:#eee;"></div>
+
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+$(window).scroll((function() {
+
+	var
+		ie = navigator.userAgent.match(/(?:msie ([0-9]+)|rv:([0-9\.]+)\) like gecko)/i),
+		webkit = (/applewebkit/i).test(navigator.userAgent),
+		documentElement = document.documentElement,
+		scrollCaptured = false,
+		lastScrollTop = 0,
+		maxScrollTop = 0;
+
+	if ((/win/i).test(navigator.appVersion) && ie) {
+		$(documentElement)
+			.bind('mousewheel', function(e) {
+				scrollFix(e.originalEvent.wheelDelta*-1);
+				e.preventDefault();
+			})
+			.bind('keydown', function(e) {
+				var keyCode = e.keyCode, documentHeight = documentElement.clientHeight, newScrollTop;
+				if ((/^(32|33|34|38|40)$/).test(keyCode)) { // (space bar|page up|page down|up arrow|down arrow)
+					scrollFix(keyCode == 32 || keyCode == 34 ? documentHeight : keyCode == 33 ? -documentHeight : keyCode == 38 ? -75 : 75);
+					e.preventDefault();
+				}
+			});
+	}
+
+	function scrollFix(scrollBy) {
+		var newScrollTop = Math.min(getMaxScrollTop(), Math.max(0, getScrollTop()+scrollBy));
+		if (newScrollTop != lastScrollTop) {
+			scroll(newScrollTop);
+			scrollCaptured = true;
+			document[webkit ? 'body' : 'documentElement'].scrollTop = newScrollTop;
+		}
+	}
+
+	function getScrollTop() {
+		return documentElement.scrollTop || (document.body ? document.body.scrollTop : 0) || 0;
+	}
+
+	function getMaxScrollTop() {
+		return Math.max(document.body ? document.body.scrollHeight : 0, documentElement.scrollHeight)-Math.min(documentElement.offsetHeight, documentElement.clientHeight);
+	}
+
+	function scroll(_scrollTop) {
+
+		var scrollTop = typeof(_scrollTop) == 'number' ? _scrollTop : getScrollTop();
+		lastScrollTop = scrollTop;
+		if (scrollCaptured) {
+			scrollCaptured = false;
+			return false;
+		}
+
+		// do something with scrollTop
+
+		// test
+		if (!window.$scrollFixTester) {
+			window.$scrollFixTester = $('<div style="position:absolute;left:50%;top:0;width:500px;height:100px;font-family:Verdana;font-size:18px;color:#aaa;text-align:center;line-height:96px;margin-left:-250px;background:#000;overflow:hidden;z-index:1000" />').appendTo(document.body);
+		}
+		window.$scrollFixTester.css('top', scrollTop).html('position: absolute; top: '+ scrollTop +'px');
+
+	}
+
+	return scroll;
+
+})());
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
