@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-
 <title> ie scroll event fix with jquery </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-
 <style>
-/*html {height:100%;}*/
+body:after { position: fixed; left: 0; top: 0; width: 100%; height: 0; content: ''; } /* chrome bug ? delayed firing without fixed element... */
 </style>
-
 </head>
 
 <body>
 
 <div style="height:5000px;background:#eee;"></div>
+<div style=""></div>
 
 <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script>
@@ -86,11 +84,3 @@ $(window).scroll((function() {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
