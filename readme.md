@@ -1,6 +1,6 @@
 ~~### Fix Internet Explorer's delayed scroll event firing.~~
 -----
-~~**Demo**  ~~
+~~**Demo*~~  
 ~~<http://www.psyonline.kr/blog/pages/jquery-ie-scroll-event-fix.html>~~
 
 This script is changed to new way.  
